@@ -1,5 +1,5 @@
 // Sample class is required
-import Sample from "Sample.js";
+// import Sample from "Sample.js"; but import  does not work in js files
 
     // we need array to track the data
     /*
@@ -26,9 +26,8 @@ simplejsId(input) , class , input , datalist , url , inputcontainer_id , datalis
  
 
     //  on clicking on shown option ater searching for specific keywords
-    function optionClicked(
-      
-      element,formatCaller) {
+    function optionClicked(element,formatCaller) {
+console.log(element);
       selectedtext = data;
       selectedtextvalue = id;
       document.getElementById("mselect_simplejs").value = data;
@@ -59,16 +58,17 @@ simplejsId(input) , class , input , datalist , url , inputcontainer_id , datalis
         let current_simplejs_list = simplejs_mlist + simplejs_counter;
         let input_simplejscontainer = simplejs_input + simplejs_counter;
         let datalist_simplejscontainer = simplejs_datalist + simplejs_counter;
-        let input = `<input type="search" onfocus="activateSearchplugin(${current_simplejs_list})"  
-id="${current_simplejs_id}" placeholder="${obj.placeholder} "
+        let input = `<input type="search" onfocus="activateSearchplugin('${current_simplejs_list}')"  
+id="${current_simplejs_id}" placeholder=" ${obj.placeholder()} "
 onkeyup="searchforkeywords({
-              'selectid':${obj.id},
-              'datalistid':${current_simplejs_list},
+              'selectid':'${obj.id}',
+              'url':'${obj.url}',
+              'datalistid':'${current_simplejs_list}',
+              'method':'${obj.method}',
               'formatCaller':${obj.formatCaller},
-              'async':${obj.async}
-              });"
-/>`;
-        let datalist = `<div id="${current_simplejs_list}" style="display:none;color:white; ;background-color:black;width:200px;height:200px;"></div>`;
+              'async':'${obj.async}',
+              }); " />`;
+        let datalist = `<div id="${current_simplejs_list}" style="display:none;width:200px;height:200px;"></div>`;
         // to init the simplejs
         let markup = `
 <label>
@@ -76,7 +76,7 @@ onkeyup="searchforkeywords({
 ${input}
 </div>
 <br>
-<div id='${datalist_simplejscontainer}'>
+<div id='${datalist_simplejscontainer}' class='simplerjs_datalist'>
   ${datalist}
 </div>
 </label>`;
@@ -102,7 +102,7 @@ ${input}
           placeholder: obj.placeholder,
           markup: markup,
           inputOnkeyup: obj.inputOnkeyup(current_simplejs_list), // available in the Sample Class
-          inputOnfocus: `activateSearchplugin(${current_simplejs_id})`, // on focusing on the input show the datalist
+          inputOnfocus: `activateSearchplugin('${current_simplejs_list}')`, // on focusing on the input show the datalist
           counter: simplejs_counter,
         });
       } else {
@@ -128,7 +128,7 @@ ${input}
           placeholder: obj.placeholder,
           markup: markup,
           inputOnkeyup: obj.inputOnkeyup(current_simplejs_list), // available in the Sample Class
-          inputOnfocus: `activateSearchplugin(${current_simplejs_id})`,
+          inputOnfocus: `activateSearchplugin('${current_simplejs_list}')`,
           counter: simplejs_counter,
         });
       }
@@ -147,21 +147,21 @@ method   [GET,POST]
 url   [link]
 async   call the method aync or not 
 */
-    function searchforkeywords(obj = {selectid:"", datalistid:"",method:"" , formatCaller:(res)=>{return res;} ,async:false }  ) {
-      let datalist = document.getElementById("keywords");
+    function searchforkeywords(obj = {selectid:"", url:"",datalistid:"",method:"" , formatCaller:(res)=>{return res;} ,async:false }  ) {
+      let datalist = document.getElementById(obj.datalistid);
       // on response happen
-      xhttp.onreadystatechange = function () {
+      simplejs_xhttp.onreadystatechange =  function() {
         if (this.readyState == 4 && this.status == 200) {
           let responsedata = JSON.parse(this.responseText);
           let fmarkup = "";
           responsedata.forEach((element) => {
-            fmarkup += ` <span onclick="optionClicked(${element});" >${obj.formatCaller(element)}  </span>`;
+            fmarkup += ` <span onclick='optionClicked("${JSON.stringify(element)}","${JSON.stringify(obj)}");' >${obj.formatCaller(element)}  </span>`;
           });
           datalist.innerHTML = fmarkup;
         }
       };
-      xhttp.open(obj.method, obj.url, obj.async);
-      xhttp.send();
+      simplejs_xhttp.open(obj.method, obj.url, obj.async);
+      simplejs_xhttp.send();
     }
 
    // show dropdown list on focusing on input search 

@@ -13,9 +13,14 @@
     <h3>Select Box below</h3>
     <select class="cmselect" id="mselect"></select>
 <script src="Simplerjs.js"></script>
+<script src="Sample.js"></script>
 
 <script> //  basic init for example
-    simplerjs({ id: "mselect", url: "ajax_info.json" });
+    var sample = new Sample();
+    sample.id = "mselect";
+    sample.url = "ajax_info.json";
+
+    simplerjs(sample);
 </script>
   </body>
 </html>

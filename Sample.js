@@ -7,10 +7,10 @@ class Sample {
   method = "GET";
   async = false;
   placeholder = () => {
-    return "Search For...";
+    return 'search for ';
   };
   formatCaller = (res) => {
-    return res;
+    return res.data;
   };
 
   inputOnkeyup=(current_simplejs_list)=>{return  `searchforkeywords({

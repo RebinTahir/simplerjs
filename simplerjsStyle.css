@@ -1,3 +1,12 @@
+.simplerjs_datalist {
+  width: auto;
+}
+
 span {
-    display: block;
-  }
+  background-color: bisque;
+  color: black;
+
+  display: block;
+  height: 20px;
+  width: auto;
+}
