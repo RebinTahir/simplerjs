@@ -1,25 +1,17 @@
 //  here we define main obj for our simplerjs  function
 
 class Sample {
-  id = "";
-  class = "";
-  url = "";
-  method = "GET";
+  id = ""; // user element id 
+  class = ""; // user element class featured
+  url = ""; // user resource for online
+  method = "GET"; // ajax method
+  datalistid = ""; // datalist id  
+  datalistContainer = ""; // datalist container element   
   async = false;
-  placeholder = () => {
+  placeholder = ()=> {
     return 'search for ';
   };
-  formatCaller = (res) => {
-    return res.data;
-  };
 
-  inputOnkeyup=(current_simplejs_list)=>{return  `searchforkeywords({
-    'selectid':${this.id},
-    'datalistid':${current_simplejs_list},
-    'formatCaller':${this.formatCaller},
-    'async':${this.async},
-    'method':${this.method}
 
-    })`;}
 
 }

@@ -19,8 +19,10 @@
     var sample = new Sample();
     sample.id = "mselect";
     sample.url = "ajax_info.json";
-
-    simplerjs(sample);
+    function formatCaller(res){
+      return res.data;
+    }
+    simplerjs(sample,formatCaller);
 </script>
   </body>
 </html>

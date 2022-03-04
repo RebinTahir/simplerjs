@@ -26,23 +26,23 @@ simplejsId(input) , class , input , datalist , url , inputcontainer_id , datalis
  
 
     //  on clicking on shown option ater searching for specific keywords
-    function optionClicked(element,formatCaller) {
+    function optionClicked(element,obj) {
 console.log(element);
-      selectedtext = data;
-      selectedtextvalue = id;
-      document.getElementById("mselect_simplejs").value = data;
+      selectedtext = element.data;
+      selectedtextvalue = element.id;
+      document.getElementById(obj.id).value =element.data;
       //  update the main select elemeent
       let option = document.createElement("option");
-      option.value = id;
+      option.value = element.id;
       option.selected = true;
-      option.innerHTML = data;
+      option.innerHTML = element.data;
       document.getElementById("mselect").appendChild(option);
     }
-
+    
   
 // from here a thousand step begin
 //  obj == an obj from  Sample class
-    function simplerjs(obj) {
+    function simplerjs(obj, formatCaller=(res)=>{return res;}) {
       // using ids
 
       if (obj.id != "") {
@@ -58,16 +58,21 @@ console.log(element);
         let current_simplejs_list = simplejs_mlist + simplejs_counter;
         let input_simplejscontainer = simplejs_input + simplejs_counter;
         let datalist_simplejscontainer = simplejs_datalist + simplejs_counter;
-        let input = `<input type="search" onfocus="activateSearchplugin('${current_simplejs_list}')"  
-id="${current_simplejs_id}" placeholder=" ${obj.placeholder()} "
-onkeyup="searchforkeywords({
-              'selectid':'${obj.id}',
-              'url':'${obj.url}',
-              'datalistid':'${current_simplejs_list}',
-              'method':'${obj.method}',
-              'formatCaller':${obj.formatCaller},
-              'async':'${obj.async}',
-              }); " />`;
+       
+       obj.datalistid = current_simplejs_list;
+       obj.datalistContainer = datalist_simplejscontainer;
+       
+        let searchevent = "searchforkeywords("+JSON.stringify(obj)+","+formatCaller+")";
+        let focusevent = "activateSearchplugin("+JSON.stringify(obj)+")";
+        
+        let input = `<input type='search' 
+        onfocus='${focusevent}'  
+        id='${current_simplejs_id}' 
+        placeholder="${obj.placeholder()}" 
+        onkeyup='${searchevent}' />`;
+        
+
+
         let datalist = `<div id="${current_simplejs_list}" style="display:none;width:200px;height:200px;"></div>`;
         // to init the simplejs
         let markup = `
@@ -101,8 +106,8 @@ ${input}
           method: obj.method,
           placeholder: obj.placeholder,
           markup: markup,
-          inputOnkeyup: obj.inputOnkeyup(current_simplejs_list), // available in the Sample Class
-          inputOnfocus: `activateSearchplugin('${current_simplejs_list}')`, // on focusing on the input show the datalist
+          inputOnkeyup: searchevent, // available in the Sample Class
+          inputOnfocus: focusevent, // on focusing on the input show the datalist
           counter: simplejs_counter,
         });
       } else {
@@ -127,8 +132,8 @@ ${input}
           method: obj.method,
           placeholder: obj.placeholder,
           markup: markup,
-          inputOnkeyup: obj.inputOnkeyup(current_simplejs_list), // available in the Sample Class
-          inputOnfocus: `activateSearchplugin('${current_simplejs_list}')`,
+          inputOnkeyup: searchevent, // available in the Sample Class
+          inputOnfocus: focusevent,
           counter: simplejs_counter,
         });
       }
@@ -147,25 +152,33 @@ method   [GET,POST]
 url   [link]
 async   call the method aync or not 
 */
-    function searchforkeywords(obj = {selectid:"", url:"",datalistid:"",method:"" , formatCaller:(res)=>{return res;} ,async:false }  ) {
+    function searchforkeywords(obj,formatCaller) {
       let datalist = document.getElementById(obj.datalistid);
+       
+      
       // on response happen
       simplejs_xhttp.onreadystatechange =  function() {
         if (this.readyState == 4 && this.status == 200) {
           let responsedata = JSON.parse(this.responseText);
           let fmarkup = "";
           responsedata.forEach((element) => {
-            fmarkup += ` <span onclick='optionClicked("${JSON.stringify(element)}","${JSON.stringify(obj)}");' >${obj.formatCaller(element)}  </span>`;
+            
+            let optclick = "optionClicked("+JSON.stringify(element)+","+JSON.stringify(obj)+")";
+
+           
+            fmarkup += ` <span onclick='${optclick}' >${ formatCaller(element) }</span>`;
           });
           datalist.innerHTML = fmarkup;
+         datalist.style.display="block";
         }
       };
       simplejs_xhttp.open(obj.method, obj.url, obj.async);
       simplejs_xhttp.send();
+    
     }
 
    // show dropdown list on focusing on input search 
-   function activateSearchplugin(id) {
-    document.getElementById(id).style.display = "block";
+   function activateSearchplugin(obj) {
+    document.getElementById(obj.id).style.display = "block";
   }
    
