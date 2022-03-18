@@ -11,25 +11,27 @@
   </head>
   <body>
     <h3>Select Box below</h3>
-    <select class="cmselect1" id="mselect1"></select>
-    <select class="cmselect2" id="mselect2"></select>
+    <select class="simselect" id=""></select>
+    <select class="simselect" id=""></select>
+    <!-- <select class="cmselect1" id="mselect1"></select>
+    -->
 
 
 <script src="Simplerjs.js"></script>
 <script src="Sample.js"></script>
 
 <script> //  basic init for example
-    var sample = new Sample();
-    sample.id = "mselect1";
-    sample.url = "ajax_info.json";
-    function formatCaller(res){
-      return res.data;
-    }
+    // var sample = new Sample();
+    // sample.id = "mselect1";
+    // sample.url = "ajax_info.json";
+    // function formatCaller(res){
+    //   return res.data;
+    // }
+    // simplerjs(sample,formatCaller);
 
 
-    simplerjs(sample,formatCaller);
     var sample = new Sample();
-    sample.id = "mselect2";
+    sample.class = "simselect";
     sample.url = "ajax_info.json";
     function formatCaller(res){
       return res.data;

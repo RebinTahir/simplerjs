@@ -25,8 +25,7 @@ var simplejs_mlist = "simplejs_keywords_";
 var simplejs_maincontainer = "simplejs_main_";
 
 //  on clicking on shown option ater searching for specific keywords
-function optionClicked(element, obj,formatCaller) {
-  console.log(obj);
+function optionClicked(element, obj, formatCaller) {
   selectedtext = element.data;
   selectedtextvalue = element.id;
   document.getElementById(obj.simplerjs_id).value = element.data; //
@@ -63,8 +62,8 @@ function simplerjs(
 
     obj.datalistid = current_simplejs_list;
     obj.datalistContainer = datalist_simplejscontainer;
-// assign id of current tracked element 
-obj.simplerjs_id =current_simplejs_id; 
+    // assign id of current tracked element
+    obj.simplerjs_id = current_simplejs_id;
     let searchevent =
       "searchforkeywords(" + JSON.stringify(obj) + "," + formatCaller + ")";
     let focusevent = "activateSearchplugin(" + JSON.stringify(obj) + ")";
@@ -112,6 +111,10 @@ ${input}
       inputOnfocus: focusevent, // on focusing on the input show the datalist
       counter: simplejs_counter,
     });
+
+    //  for options we need to update datalist while user typing it .
+    // so we have puted in another event
+    simplejs_counter++;
   } else {
     // using class
     // we need to loop through all lements with same class name
@@ -121,28 +124,81 @@ ${input}
     //   for each element we will have new ids
     //  we must bring the id for each select elment
     // and put it in obj below
-    simplejs_tracker.push({
-      selectid: obj.id, // need to bechanged to the id we get using dom parsing
-      simplejsid: current_simplejs_id,
-      input: input,
-      datalist: datalist,
-      inputContainer: input_simplejscontainer,
-      datalistContainer: datalist_simplejscontainer,
-      mainContainer: simplejs_maincontainer_id,
-      datalistid: current_simplejs_list,
-      url: obj.url,
-      method: obj.method,
-      placeholder: obj.placeholder,
-      markup: markup,
-      inputOnkeyup: searchevent, // available in the Sample Class
-      inputOnfocus: focusevent,
-      counter: simplejs_counter,
-    });
-  }
 
-  //  for options we need to update datalist while user typing it .
-  // so we have puted in another event
-  simplejs_counter++;
+    let elements = document.getElementsByClassName(obj.class);
+    // loop through each element
+
+    for (elm of elements) {
+      // hide the elem no space taken by it
+      elm.style.visibility = "hidden";
+      elm.style.width = "0px";
+      elm.style.height = "0px";
+      // create definers for our simplerjs element
+      let container = document.createElement("div");
+      let simplejs_maincontainer_id = simplejs_maincontainer + simplejs_counter;
+      let current_simplejs_id = simplejs_name + simplejs_counter;
+      let current_simplejs_list = simplejs_mlist + simplejs_counter;
+      let input_simplejscontainer = simplejs_input + simplejs_counter;
+      let datalist_simplejscontainer = simplejs_datalist + simplejs_counter;
+
+      // record the data sets
+      obj.datalistid = current_simplejs_list;
+      obj.datalistContainer = datalist_simplejscontainer;
+      // assign id of current tracked element
+      obj.simplerjs_id = current_simplejs_id;
+      // since we use class we neeed to define a new id for this obj at the same time set new id for user select element
+      // combines from both the name of the container and the new id for the input that simplerjs will created
+      obj.id = simplejs_maincontainer_id + "_" + current_simplejs_id;
+      obj.simplerjs_id = current_simplejs_id;
+      elm.id = obj.id;
+
+      let searchevent =
+        "searchforkeywords(" + JSON.stringify(obj) + "," + formatCaller + ")";
+      let focusevent = "activateSearchplugin(" + JSON.stringify(obj) + ")";
+
+      let input = `<input type='search' 
+      onfocus='${focusevent}'  
+      id='${current_simplejs_id}' 
+      placeholder="${obj.placeholder()}" 
+      onkeyup='${searchevent}' />`;
+
+      let datalist = `<div id="${current_simplejs_list}" style="display:none;width:200px;height:200px;"></div>`;
+      // to init the simplejs
+      let markup = `
+<label>
+<div id='${input_simplejscontainer}'>
+${input}
+</div>
+<br>
+<div id='${datalist_simplejscontainer}' class='simplerjs_datalist'>
+${datalist}
+</div>
+</label>`;
+
+      // convert simple js to html
+      container.innerHTML = markup;
+      // apply new design to element before selected element
+      elm.before(container);
+      simplejs_tracker.push({
+        selectid: obj.id, // need to bechanged to the id we get using dom parsing
+        simplejsid: current_simplejs_id,
+        input: input,
+        datalist: datalist,
+        inputContainer: input_simplejscontainer,
+        datalistContainer: datalist_simplejscontainer,
+        mainContainer: simplejs_maincontainer_id,
+        datalistid: current_simplejs_list,
+        url: obj.url,
+        method: obj.method,
+        placeholder: obj.placeholder,
+        markup: markup,
+        inputOnkeyup: searchevent, // available in the Sample Class
+        inputOnfocus: focusevent,
+        counter: simplejs_counter,
+      });
+      simplejs_counter++;
+    }
+  }
 }
 
 //  search for data while user types on keyboard
@@ -165,7 +221,12 @@ function searchforkeywords(obj, formatCaller) {
       responsedata.forEach((element) => {
         let optclick =
           "optionClicked(" +
-          JSON.stringify(element) +"," +JSON.stringify(obj) +"," + formatCaller +")";
+          JSON.stringify(element) +
+          "," +
+          JSON.stringify(obj) +
+          "," +
+          formatCaller +
+          ")";
         fmarkup += ` <span onclick='${optclick}' >${formatCaller(
           element
         )}</span>`;
