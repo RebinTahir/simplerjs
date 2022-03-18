@@ -7,6 +7,7 @@ class Sample {
   method = "GET"; // ajax method
   datalistid = ""; // datalist id  
   datalistContainer = ""; // datalist container element   
+  simplerjs_id = ""; // id of current tracked element which is created by simplerjs  
   async = false;
   placeholder = ()=> {
     return 'search for ';
