@@ -11,8 +11,13 @@
   </head>
   <body>
     <h3>Select Box below</h3>
-    <select class="simselect" id=""></select>
-    <select class="simselect" id=""></select>
+    <select class="" id="simselect">
+<option value="1" selected="true"> option1 </option>
+<option value="2" > option2 </option>
+
+
+    </select>
+    <select class="" id="simselect2"></select>
     <!-- <select class="cmselect1" id="mselect1"></select>
     -->
 
@@ -31,7 +36,7 @@
 
 
     var sample = new Sample();
-    sample.class = "simselect";
+    sample.id = "simselect";
     sample.url = "ajax_info.json";
     function formatCaller(res){
       return res.data;

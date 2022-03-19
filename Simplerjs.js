@@ -37,6 +37,10 @@ function optionClicked(element, obj, formatCaller) {
   document.getElementById(obj.id).appendChild(option);
 }
 
+function defaultOptionClicked(option, obj) {
+  console.log(option);
+  console.log(obj);
+}
 // from here a thousand step begin
 //  obj == an obj from  Sample class
 function simplerjs(
@@ -49,6 +53,14 @@ function simplerjs(
 
   if (obj.id != "") {
     let elm = document.getElementById(obj.id);
+    let optarr = [];
+    let html = "";
+    for (opt of elm.options) {
+      optarr.push(opt);
+      // we need to pass an option to the html function so that we can copy it later to the main user element
+      // html += `<span onClick="defaultOptionClicked('<option value='${opt.value}'>dsvjdhb</option> ' , ${JSON.stringify(obj)})' >${opt.innerHTML} </span>`;
+    }
+   
     // hide the elem no space taken by it
     elm.style.visibility = "hidden";
     elm.style.width = "0px";
@@ -83,6 +95,7 @@ ${input}
 </div>
 <br>
 <div id='${datalist_simplejscontainer}' class='simplerjs_datalist'>
+${html}
   ${datalist}
 </div>
 </label>`;
@@ -110,6 +123,7 @@ ${input}
       inputOnkeyup: searchevent, // available in the Sample Class
       inputOnfocus: focusevent, // on focusing on the input show the datalist
       counter: simplejs_counter,
+      options: optarr,
     });
 
     //  for options we need to update datalist while user typing it .
@@ -141,6 +155,12 @@ ${input}
       let input_simplejscontainer = simplejs_input + simplejs_counter;
       let datalist_simplejscontainer = simplejs_datalist + simplejs_counter;
 
+      let optarr = [];
+
+      for (opt of elm.options) {
+        optarr.push(opt);
+      }
+
       // record the data sets
       obj.datalistid = current_simplejs_list;
       obj.datalistContainer = datalist_simplejscontainer;
@@ -171,7 +191,10 @@ ${input}
 </div>
 <br>
 <div id='${datalist_simplejscontainer}' class='simplerjs_datalist'>
+
 ${datalist}
+
+
 </div>
 </label>`;
 
@@ -195,6 +218,7 @@ ${datalist}
         inputOnkeyup: searchevent, // available in the Sample Class
         inputOnfocus: focusevent,
         counter: simplejs_counter,
+        options: optarr,
       });
       simplejs_counter++;
     }

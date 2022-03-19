@@ -1,6 +1,6 @@
 //  here we define main obj for our simplerjs  function
 
-class Sample {
+ class Sample {
   id = ""; // user element id 
   class = ""; // user element class featured
   url = ""; // user resource for online
@@ -12,6 +12,13 @@ class Sample {
   placeholder = ()=> {
     return 'search for ';
   };
+  _options = [];
+  get options() {
+    return this._options;
+  }
+  set setOptions(value) {
+    this._options = value;
+  }
 
 
 
