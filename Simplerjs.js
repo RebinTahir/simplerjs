@@ -32,6 +32,8 @@ function optionClicked(element, obj, formatCaller) {
   option.selected = true;
   option.innerHTML = formatCaller(element);
   document.getElementById(obj.id).appendChild(option);
+  document.getElementById(obj.id).val(element.id);
+  
 }
 function defaultOptionClicked(option, obj) {
   console.log(option);
@@ -77,14 +79,14 @@ function simplerjs(
         id='${current_simplejs_id}' 
         placeholder="${obj.placeholder()}" 
         onkeyup='${searchevent}' />`;
-    let datalist = `<div id="${current_simplejs_list}" style="display:none;width:200px;height:200px;"></div>`;
+    let datalist = `<div id="${current_simplejs_list}" style="margin-top:0px;;display:none;width:200px;height:200px;"></div>`;
     // to init the simplejs
     let markup = `
 <label>
 <div id='${input_simplejscontainer}'>
 ${input}
 </div>
-<br>
+
 <div id='${datalist_simplejscontainer}' class='simplerjs_datalist'>
 ${html}
   ${datalist}
@@ -212,6 +214,7 @@ async   call the method aync or not
 function searchforkeywords(obj, formatCaller) {
   let datalist = document.getElementById(obj.datalistid);
   // on response happen
+
   simplejs_xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       let responsedata = JSON.parse(this.responseText);
